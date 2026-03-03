@@ -13,10 +13,12 @@ import { FeishuAdapter } from './src/feishu/feishu.adapter';
 import type { BridgeAdapter } from './src/types';
 import { TelegramAdapter } from './src/telegram/telegram.adapter';
 import { QQAdapter } from './src/qq/qq.adapter';
+import { TestAppAdapter } from './src/testApp/testApp.adapter';
 
 import { parseFeishuConfig } from './index.feishu';
 import { parseTelegramConfig } from './index.telegram';
 import { parseQQConfig } from './index.qq';
+import { parseTestAppConfig } from './index.testapp';
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -91,6 +93,14 @@ export const BridgePlugin: Plugin = async ctx => {
       if (isEnabled(cfg, AGENT_IMESSAGE)) {
         bridgeLogger.info('[Plugin] imessage-bridge enabled (not implemented yet).');
         // TODO: mux.register(AGENT_IMESSAGE, new IMessageAdapter(...))
+      }
+
+      if (isEnabled(cfg, 'testapp')) {
+        const testAppCfg = parseTestAppConfig(cfg);
+        adaptersToStart.push({
+          key: 'testapp',
+          create: () => new TestAppAdapter(testAppCfg),
+        });
       }
 
       if (adaptersToStart.length === 0) {

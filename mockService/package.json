@@ -1,0 +1,20 @@
+{
+  "name": "mock-feishu-server",
+  "version": "1.0.0",
+  "description": "Mock Feishu WebSocket Server for testing",
+  "main": "mock-server.js",
+  "scripts": {
+    "start": "node mock-server.js",
+    "dev": "node mock-server.js"
+  },
+  "keywords": [
+    "mock",
+    "feishu",
+    "websocket"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.19.0"
+  }
+}
