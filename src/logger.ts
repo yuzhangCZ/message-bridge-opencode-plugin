@@ -22,8 +22,6 @@ function formatLine(level: BridgeLogLevel, message: string): string {
   else if (message.includes('[Listener]')) tagEmoji = '🎧';
   else if (message.includes('[Plugin]')) tagEmoji = '🧩';
   else if (message.includes('[BridgeFlow]') || message.includes('[BridgeFlowDebug]')) tagEmoji = '⚙️';
-  else if (message.includes('[Feishu]')) tagEmoji = '🪶';
-  else if (message.includes('[Telegram]')) tagEmoji = '✈️';
   else if (message.includes('[TestApp]')) tagEmoji = '🧪';
   else if (message.includes('[FileStore]')) tagEmoji = '📁';
   return `[${new Date().toISOString()}] ${levelEmoji}  ${tagEmoji} [${level}] ${message}`;

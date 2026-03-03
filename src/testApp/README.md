@@ -1,6 +1,6 @@
 # TestApp Platform Adapter
 
-基于 `@src/feishu/` 实现逻辑新增的平台接入，与 mock server 服务对接。
+WebSocket 消息桥接适配器，与 mock server 服务对接。
 
 ## 目录结构
 

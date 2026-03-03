@@ -4,7 +4,6 @@ import {
   DEFAULT_MAX_FILE_MB,
   DEFAULT_MAX_FILE_RETRY,
   globalState,
-  isBridgeAgentId,
 } from '../utils';
 import { getFileStoreCacheStats } from '../bridge/file.store';
 import { bridgeLogger, getBridgeLogFilePath } from '../logger';
@@ -126,7 +125,7 @@ function normalizeAgentCandidate(item: unknown): AgentCandidate | null {
 }
 
 function isMessageBridgeAgentName(nameOrId: string): boolean {
-  return isBridgeAgentId(nameOrId);
+  return nameOrId === 'testapp';
 }
 
 function pickUsableAgents(raw: unknown): AgentListItem[] {
@@ -344,8 +343,6 @@ export async function handleSlashCommand(ctx: CommandContext): Promise<boolean> 
       lines.push(`- chatPendingAuthorization: ${chatPendingAuthorization.size}`);
       lines.push(`- pendingAuthorizationTimers: ${pendingAuthorizationTimers.size}`);
       lines.push(`- progressMessageIds: ${globalState.__bridge_progress_msg_ids?.size || 0}`);
-      lines.push(`- feishuProcessedIds: ${globalState.__feishu_processed_ids?.size || 0}`);
-      lines.push(`- qqProcessedIds: ${globalState.__qq_processed_ids?.size || 0}`);
       lines.push(
         `- fileStore: chats=${fileStoreStats.trackedChats}, seenChats=${fileStoreStats.seenChats}, seenFiles=${fileStoreStats.seenFiles}, pendingChats=${fileStoreStats.pendingChats}, pendingFiles=${fileStoreStats.pendingFiles}`,
       );
@@ -763,12 +760,6 @@ export async function handleSlashCommand(ctx: CommandContext): Promise<boolean> 
 
     if (globalState.__bridge_progress_msg_ids) {
       globalState.__bridge_progress_msg_ids.clear();
-    }
-    if (globalState.__feishu_processed_ids) {
-      globalState.__feishu_processed_ids.clear();
-    }
-    if (globalState.__qq_processed_ids) {
-      globalState.__qq_processed_ids.clear();
     }
 
     const sessionId = await createNewSession();

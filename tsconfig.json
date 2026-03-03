@@ -16,6 +16,6 @@
       "@opencode-ai/plugin": ["./node_modules/@opencode-ai/plugin/dist/index.d.ts"]
     }
   },
-  "include": ["index.ts", "src/**/*"],
+  "include": ["index.ts", "index.*.ts", "src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

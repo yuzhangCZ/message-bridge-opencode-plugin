@@ -1,8 +1,8 @@
 {
   "name": "message-bridge-opencode-plugin",
   "version": "1.0.0",
-  "description": "Feishu Bridge Plugin for OpenCode",
-  "main": "index.ts",
+  "description": "Message Bridge Plugin for OpenCode",
+  "main": "/dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -21,16 +21,13 @@
   },
   "keywords": [
     "opencode",
-    "feishu",
-    "telegram"
+    "bridge"
   ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@larksuiteoapi/node-sdk": "^1.26.0",
-    "axios": "^1.13.4",
     "lru-cache": "^11.2.6",
-    "tweetnacl": "^1.0.3"
+    "ws": "^8.18.0"
   },
   "peerDependencies": {
     "@opencode-ai/plugin": "^1.1.48",

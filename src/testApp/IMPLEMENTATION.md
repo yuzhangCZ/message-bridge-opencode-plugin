@@ -19,10 +19,7 @@ mockService/
 ├── mock-server.js            # Mock WebSocket 服务器
 ├── config.js                 # 配置文件
 ├── package.json              # npm 包配置
-├── README.md                 # 使用文档
-└── docs/
-    ├── api.md                # API 文档（im.message.receive_v1 事件格式）
-    └── feishuCard.md         # Feishu Card 数据结构解析
+└── README.md                 # 使用文档
 ```
 
 ### 2. 核心实现

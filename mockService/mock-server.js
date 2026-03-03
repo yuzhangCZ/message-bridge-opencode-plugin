@@ -104,7 +104,7 @@ wss.on('connection', (ws) => {
           sender_id: {
             union_id: `union_${Date.now()}`,
             user_id: `user_${Date.now()}`,
-            open_id: `open_${Date.now()}`
+            open_id: `open_test_id`
           },
           sender_type: 'user',
           tenant_key: `tenant_${Date.now()}`

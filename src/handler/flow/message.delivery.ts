@@ -7,8 +7,6 @@ import { bridgeLogger } from '../../logger';
 type SessionContext = { chatId: string; senderId: string };
 
 function getEditRetryDelay(adapter: BridgeAdapter): number {
-  const provider = (adapter as { provider?: string }).provider;
-  if (provider === 'telegram') return 60;
   return 500;
 }
 

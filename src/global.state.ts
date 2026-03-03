@@ -5,7 +5,6 @@ export type BridgeSendErrorFn = (chatId: string, content: string) => Promise<voi
 
 type BridgeRuntimeState = {
   __bridge_mux?: AdapterMux;
-  __bridge_feishu_adapter?: BridgeAdapter;
   __bridge_adapter_instances?: Map<string, BridgeAdapter>;
   __bridge_started_adapters?: Set<string>;
   __bridge_starting_adapters?: Set<string>;
@@ -16,14 +15,4 @@ type BridgeRuntimeState = {
   __bridge_max_file_retry?: Map<string, number>;
 };
 
-type FeishuRuntimeState = {
-  __feishu_processed_ids?: Set<string>;
-  __feishu_ws_client_instance?: unknown;
-};
-
-type QQRuntimeState = {
-  __qq_processed_ids?: Set<string>;
-  __qq_ws_client_instance?: unknown;
-};
-
-export type BridgeGlobalState = typeof globalThis & BridgeRuntimeState & FeishuRuntimeState & QQRuntimeState;
+export type BridgeGlobalState = typeof globalThis & BridgeRuntimeState;
