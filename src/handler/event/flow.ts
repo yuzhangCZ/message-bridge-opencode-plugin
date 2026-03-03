@@ -75,6 +75,7 @@ export async function startGlobalEventListenerWithDeps(
 
       for await (const event of events.stream) {
         const e = unwrapObservedEvent(event);
+        bridgeLogger.info('[BridgeFlowDebug] event received', event);
         if (deps.listenerState.shouldStopListener) break;
         if (!e) {
           bridgeLogger.debug('[BridgeFlow] event.observed.unparsed', event);

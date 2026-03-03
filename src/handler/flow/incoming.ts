@@ -225,6 +225,15 @@ export const createIncomingHandlerWithDeps = (
       ) => {
         const agent = deps.chatAgent.get(cacheKey);
         const model = deps.chatModel.get(cacheKey);
+        const test = {
+          path: { id: sessionId },
+          body: {
+            parts: partList,
+            ...(agent ? { agent } : {}),
+            ...(model ? { model: { providerID: model.providerID, modelID: model.modelID } } : {}),
+          },
+        }
+        bridgeLogger.info('[QuestionFlow] submitting prompt', `${JSON.stringify(test)}`);
         await api.session.prompt({
           path: { id: sessionId },
           body: {
