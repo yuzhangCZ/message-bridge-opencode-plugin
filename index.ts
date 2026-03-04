@@ -1,12 +1,13 @@
 // index.ts
 import type { Plugin } from '@opencode-ai/plugin';
 
-import { globalState, isEnabled, runtimeInstanceId } from './src/utils';
+import { globalState, runtimeInstanceId } from './src/utils';
 import { bridgeLogger, getBridgeLogFilePath } from './src/logger';
 
 import { AdapterMux } from './src/handler/mux';
 import { createIncomingHandler, handleHookEvent } from './src/handler';
 import { setBridgeFileStoreDir } from './src/bridge/file.store';
+import { ConfigValidationError, loadBridgeConfig, redactSecret } from './src/config/bridge.config';
 
 import type { BridgeAdapter } from './src/types';
 
@@ -29,7 +30,7 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): 
 }
 
 export const BridgePlugin: Plugin = async ctx => {
-  const { client } = ctx;
+  const { client, directory } = ctx;
   const sourceMode = process.env.BRIDGE_EVENT_SOURCE_MODE || 'hook-only';
   if (sourceMode !== 'hook-only') {
     bridgeLogger.warn(
@@ -44,8 +45,7 @@ export const BridgePlugin: Plugin = async ctx => {
 
   const bootstrap = async () => {
     try {
-      const raw = await client.config.get();
-      const cfg = raw?.data;
+      const bridgeConfig = loadBridgeConfig(directory);
       const adapterInstances: Map<string, BridgeAdapter> =
         globalState.__bridge_adapter_instances || new Map<string, BridgeAdapter>();
       const startedAdapters: Set<string> =
@@ -57,16 +57,18 @@ export const BridgePlugin: Plugin = async ctx => {
       globalState.__bridge_starting_adapters = startingAdapters;
 
       const adaptersToStart: Array<{ key: string; create: () => Promise<BridgeAdapter> }> = [];
-
-      if (isEnabled(cfg, 'testapp')) {
-        const [{ parseTestAppConfig }, { TestAppAdapter }] = await Promise.all([
-          import('./index.testapp.js'),
-          import('./src/testApp/testApp.adapter.js'),
-        ]);
-        const testAppCfg = parseTestAppConfig(cfg);
+      if (bridgeConfig.enabled && bridgeConfig.testapp) {
+        const { TestAppAdapter } = await import('./src/testApp/testApp.adapter.js');
+        const testAppCfg = bridgeConfig.testapp;
+        if (bridgeConfig.runtime.file_store_dir) {
+          setBridgeFileStoreDir(bridgeConfig.runtime.file_store_dir);
+        }
         if (testAppCfg.file_store_dir) {
           setBridgeFileStoreDir(testAppCfg.file_store_dir);
         }
+        bridgeLogger.info(
+          `[Plugin] loaded bridge config platform=testapp enabled=${bridgeConfig.enabled} server_url=${testAppCfg.server_url} sources=${bridgeConfig.sources.join('|')} ak=${redactSecret(testAppCfg.ak)} sk=${redactSecret(testAppCfg.sk)}`,
+        );
         adaptersToStart.push({
           key: 'testapp',
           create: async () => new TestAppAdapter(testAppCfg),
@@ -113,6 +115,12 @@ export const BridgePlugin: Plugin = async ctx => {
 
       bridgeLogger.info('[Plugin] BridgePlugin ready');
     } catch (e) {
+      if (e instanceof ConfigValidationError) {
+        bridgeLogger.error('[Plugin] bridge config validation failed', {
+          sourcePath: e.sourcePath,
+          issues: e.issues,
+        });
+      }
       bridgeLogger.error('[Plugin] bootstrap error', e);
     }
   };

@@ -78,7 +78,7 @@ Last Updated: 2026-03-04
 
 ### E5 - No agent node dependency
 - 输入：`opencode.json` 不含 `agent.testapp`
-- 期望：主路径仍可启动，且不依赖 agent 节点配置
+- 期望：主路径仍可启动，且不依赖且不读取 agent 节点配置
 
 ## Test Data and Fixtures（测试数据与夹具）
 1. `fixtures/config/minimal.jsonc`

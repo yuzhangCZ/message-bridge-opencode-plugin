@@ -118,15 +118,26 @@ export class TestAppClient {
       this.ws.send(JSON.stringify(loginMessage));
 
       // Wait for login response
+      let settled = false;
+      let timeout: NodeJS.Timeout | undefined;
+
+      const settle = (ok: boolean, err?: Error) => {
+        if (settled) return;
+        settled = true;
+        this.ws?.off('message', messageHandler);
+        if (timeout) clearTimeout(timeout);
+        if (ok) resolve();
+        else reject(err);
+      };
+
       const messageHandler = (data: WebSocket.Data) => {
         try {
           const response: LoginResponse = JSON.parse(data.toString());
           if (response.type === 'login_response') {
-            this.ws?.off('message', messageHandler);
             if (response.status === 'success') {
-              resolve();
+              settle(true);
             } else {
-              reject(new Error(response.error || 'Login failed'));
+              settle(false, new Error(response.error || 'Login failed'));
             }
           }
         } catch {
@@ -137,9 +148,8 @@ export class TestAppClient {
       this.ws.on('message', messageHandler);
 
       // Timeout after 10 seconds
-      setTimeout(() => {
-        this.ws?.off('message', messageHandler);
-        reject(new Error('Login timeout'));
+      timeout = setTimeout(() => {
+        settle(false, new Error('Login timeout'));
       }, 10000);
     });
   }

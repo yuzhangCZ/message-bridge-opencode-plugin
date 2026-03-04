@@ -1,5 +1,30 @@
 # Architecture Changelog
 
+## 2026-03-04 - v1.10 Remove Agent Config Compatibility Path
+
+### Summary
+移除 `agent.testapp.options` 兼容回退路径，配置主路径收敛为独立配置文件（`.opencode/message-bridge.jsonc` / `~/.config/opencode/message-bridge.jsonc`）；并同步更新需求/设计/测试/使用文档中的“无兼容”描述。
+
+### Changed Files
+- `index.ts`
+- `src/config/bridge.config.ts`
+- `docs/architecture/requirements/message-bridge-config-decoupling.zh.md`
+- `docs/architecture/design/message-bridge-config-decoupling.zh.md`
+- `docs/architecture/testing/message-bridge-config-decoupling-testplan.zh.md`
+- `config-guide/message-bridge/GUIDE.zh.md`
+- `docs/architecture/changelog.md`
+
+### Impact Scope
+- Runtime behavior changed (no compatibility fallback)
+- Documentation aligned with runtime behavior
+- No external OpenCode API change
+
+### Compatibility
+- Breaking change: `agent.*.options` no longer used by this plugin for TestApp config.
+
+### Follow-up
+- 若后续需要迁移辅助，可增加启动期明确错误提示与迁移指引，不恢复兼容回退逻辑。
+
 ## 2026-03-04 - v1.9 Config Decoupling Docs Baseline (TestApp-first)
 
 ### Summary

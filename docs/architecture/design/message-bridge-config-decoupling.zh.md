@@ -26,8 +26,7 @@ Last Updated: 2026-03-04
 
 ### Runtime Integration
 1. 插件入口读取独立配置主路径。
-2. 仅在“兼容开关开启”时尝试回退读取 `agent.testapp.options`。
-3. TestApp 初始化逻辑仍复用既有语义：
+2. TestApp 初始化逻辑仍复用既有语义：
 - 必填字段：`app_id/ak/sk`
 - `mode` 固定 `ws`
 - `server_url` 默认 `ws://localhost:8179`
@@ -58,7 +57,7 @@ interface BridgePluginConfig {
 }
 
 interface ConfigSourceMeta {
-  source: 'env' | 'project' | 'user' | 'default' | 'compat-agent';
+  source: 'env' | 'project' | 'user' | 'default';
   path?: string;
 }
 
@@ -105,10 +104,6 @@ interface ConfigValidationError {
 固定优先级：
 `ENV > 项目级配置 > 用户级配置 > 默认值`
 
-兼容入口：
-- `compat-agent`（`agent.testapp` / `agent.message-bridge`）仅在显式启用兼容开关时参与。
-- 默认关闭。
-
 ## Logging and Redaction（日志与脱敏）
 1. 启动日志输出：
 - 配置来源列表
@@ -129,7 +124,7 @@ TestApp 适配器只消费标准化后的配置对象，不直接访问原始配
 
 ## Compatibility Strategy（兼容策略）
 1. 主路径为独立配置文件。
-2. 兼容入口仅保留文档说明，不作为默认实现路径。
+2. 不提供 `agent.*.options` 兼容回退。
 3. 后续平台扩展通过提升 `config_version`（例如 `2`）演进。
 
 ## Testability by Design（可测试性设计）
@@ -138,9 +133,7 @@ TestApp 适配器只消费标准化后的配置对象，不直接访问原始配
 3. `ConfigLoadResult.sources` 作为断言点，支持覆盖优先级测试。
 
 ## Risks and Mitigations（风险与缓解）
-1. 风险：配置迁移期间用户仍使用 `agent.testapp`。
-- 缓解：提供兼容开关与清晰迁移提示。
-2. 风险：运行时日志泄露密钥。
+1. 风险：运行时日志泄露密钥。
 - 缓解：强制统一脱敏函数，测试覆盖脱敏行为。
 
 ## Acceptance Mapping（设计到验收映射）

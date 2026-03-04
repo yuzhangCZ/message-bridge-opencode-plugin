@@ -32,7 +32,7 @@ Last Updated: 2026-03-04
 
 ## Non-Goals（非目标）
 1. 不实现多平台统一契约（当前仅 TestApp）。
-2. 不将兼容入口作为默认路径。
+2. 不引入 `agent.*.options` 兼容回退路径。
 3. 不修改 OpenCode 源码。
 
 ## Configuration File Location（配置文件位置）
@@ -87,11 +87,6 @@ Last Updated: 2026-03-04
 `ENV > 项目级配置 > 用户级配置 > 默认值`
 
 主路径不依赖 `opencode.json agent.*.options`。
-
-## Optional Compatibility（可选兼容方案）
-仅文档说明，不作为主路径：
-- `agent.testapp`
-- `agent.message-bridge` 且 `hidden=true`
 
 ## Acceptance Criteria（验收标准）
 1. 最小配置可通过配置解析并启动 TestApp 适配器。

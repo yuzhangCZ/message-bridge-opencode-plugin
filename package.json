@@ -17,6 +17,9 @@
   "homepage": "https://github.com/YuanG1944/message-bridge-opencode-plugin",
   "scripts": {
     "build": "tsc",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "npm run build && node --test tests/unit/**/*.test.mjs",
+    "test:e2e": "npm run build && node --test tests/e2e/**/*.test.mjs",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

@@ -129,10 +129,6 @@ opencode web
 
 ---
 
-## Compatibility（可选兼容入口）
+## 配置原则
 
-以下入口仅用于兼容，不推荐新项目使用：
-1. `opencode.json -> agent.testapp.options`
-2. `opencode.json -> agent.message-bridge` 且 `hidden=true`
-
-主路径始终建议使用独立配置文件。
+插件仅支持独立配置文件主路径，不支持 `opencode.json -> agent.*.options` 兼容回退。
