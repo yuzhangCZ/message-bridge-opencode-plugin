@@ -41,6 +41,9 @@ Last Updated: 2026-03-04
 - 职责：流式缓冲、文件落盘、日志与可观测性。
 
 ### 文档索引（一跳到达）
+- 配置解耦需求（TestApp 基线）：[message-bridge-config-decoupling.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/requirements/message-bridge-config-decoupling.zh.md)
+- 配置解耦设计（TestApp-first）：[message-bridge-config-decoupling.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/design/message-bridge-config-decoupling.zh.md)
+- 配置解耦测试计划（Unit + E2E）：[message-bridge-config-decoupling-testplan.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/testing/message-bridge-config-decoupling-testplan.zh.md)
 - Adapter 契约：[bridge-adapter.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/interfaces/bridge-adapter.zh.md)
 - OpenCode SDK 接口面：[opencode-sdk.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/interfaces/opencode-sdk.zh.md)
 - TestApp 协议：[testapp-protocol.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/interfaces/testapp-protocol.zh.md)

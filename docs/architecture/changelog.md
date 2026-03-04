@@ -1,5 +1,29 @@
 # Architecture Changelog
 
+## 2026-03-04 - v1.9 Config Decoupling Docs Baseline (TestApp-first)
+
+### Summary
+新增“配置解耦（TestApp 基线）”文档包，冻结独立配置文件主路径、完整配置契约（最小/完整模板）、以及 Unit + E2E 测试计划，作为后续实现与回归依据。
+
+### Changed Files
+- `docs/architecture/requirements/message-bridge-config-decoupling.zh.md`
+- `docs/architecture/design/message-bridge-config-decoupling.zh.md`
+- `docs/architecture/testing/message-bridge-config-decoupling-testplan.zh.md`
+- `config-guide/message-bridge/GUIDE.zh.md`
+- `docs/architecture/README.zh.md`
+- `docs/architecture/changelog.md`
+
+### Impact Scope
+- Documentation baseline added
+- No runtime behavior change
+- No external API change
+
+### Compatibility
+- Backward compatible (docs-only change)
+
+### Follow-up
+- 后续实现阶段按该文档包落地配置加载器、校验器、脱敏日志与测试用例。
+
 ## 2026-03-04 - v1.8 Route Miss Noise Classification
 
 ### Summary
