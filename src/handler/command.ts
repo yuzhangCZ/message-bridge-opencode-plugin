@@ -375,6 +375,15 @@ export async function handleSlashCommand(ctx: CommandContext): Promise<boolean> 
     lines.push(`- node: ${process.version}`);
     lines.push(`- platform: ${process.platform}/${process.arch}`);
     lines.push(`- logFile: ${getBridgeLogFilePath()}`);
+    const hookHealth = globalState.__bridge_hook_health_snapshot?.();
+    if (hookHealth) {
+      lines.push(`- eventSourceMode: ${hookHealth.sourceMode}`);
+      lines.push(`- hookIngestedTotal: ${hookHealth.ingestedTotal}`);
+      lines.push(`- hookLastEventType: ${hookHealth.lastEventType || '-'}`);
+      lines.push(
+        `- hookLastEventAt: ${hookHealth.lastEventAt ? new Date(hookHealth.lastEventAt).toISOString() : '-'}`,
+      );
+    }
     await sendCommandMessage(lines.join('\n'));
     return true;
   }

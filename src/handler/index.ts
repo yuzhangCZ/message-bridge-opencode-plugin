@@ -5,6 +5,9 @@ import type { MessageBuffer } from '../bridge/buffer';
 import { AdapterMux } from './mux';
 import { createIncomingHandlerWithDeps } from './flow';
 import { startGlobalEventListenerWithDeps, stopGlobalEventListenerWithDeps } from './event';
+import { dispatchEventByType } from './event';
+import { unwrapObservedEvent, readStringField } from './event';
+import { createHookHealthTracker } from './event/hook.health';
 import { globalState } from '../utils';
 import type { PendingAuthorizationState, PendingQuestionState } from './proxy';
 import { extractErrorMessage } from './shared';
@@ -40,6 +43,9 @@ globalState.__bridge_max_file_size = chatMaxFileSizeMb;
 globalState.__bridge_max_file_retry = chatMaxFileRetry;
 
 const listenerState = { isListenerStarted: false, shouldStopListener: false };
+const sourceMode = process.env.BRIDGE_EVENT_SOURCE_MODE || 'hook-only';
+const hookHealth = createHookHealthTracker(sourceMode);
+globalState.__bridge_hook_health_snapshot = hookHealth.snapshot;
 
 function buildQuestionCallToken(messageId: string, callID: string): string {
   return `${messageId}::${callID}`;
@@ -134,9 +140,8 @@ export async function startGlobalEventListener(api: OpencodeClient, mux: Adapter
   });
 }
 
-export function stopGlobalEventListener() {
-  clearAllPendingAuthorizations();
-  stopGlobalEventListenerWithDeps({
+function getEventDeps() {
+  return {
     listenerState,
     sessionToCtx,
     sessionActiveMsg,
@@ -158,7 +163,36 @@ export function stopGlobalEventListener() {
     sessionReplyWatchdogTimers,
     isQuestionCallHandled,
     markQuestionCallHandled,
-  });
+  };
+}
+
+function extractSessionIdFromEvent(event: { type: string; properties?: unknown }): string | undefined {
+  const props =
+    event && event.properties && typeof event.properties === 'object'
+      ? (event.properties as Record<string, unknown>)
+      : {};
+  const info =
+    props.info && typeof props.info === 'object' ? (props.info as Record<string, unknown>) : {};
+  const part =
+    props.part && typeof props.part === 'object' ? (props.part as Record<string, unknown>) : {};
+  return (
+    readStringField(props, 'sessionID', 'sessionId') ||
+    readStringField(info, 'sessionID', 'sessionId') ||
+    readStringField(part, 'sessionID', 'sessionId')
+  );
+}
+
+export async function handleHookEvent(api: OpencodeClient, mux: AdapterMux, rawEvent: unknown) {
+  const event = unwrapObservedEvent(rawEvent);
+  if (!event) return;
+  const sessionId = extractSessionIdFromEvent(event);
+  hookHealth.recordEvent(event.type, sessionId);
+  await dispatchEventByType(event, api, mux, getEventDeps());
+}
+
+export function stopGlobalEventListener() {
+  clearAllPendingAuthorizations();
+  stopGlobalEventListenerWithDeps(getEventDeps());
 }
 
 export const createIncomingHandler = (api: OpencodeClient, mux: AdapterMux, adapterKey: string) =>

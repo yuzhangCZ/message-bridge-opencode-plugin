@@ -5,7 +5,7 @@ import { globalState, isEnabled, runtimeInstanceId } from './src/utils';
 import { bridgeLogger, getBridgeLogFilePath } from './src/logger';
 
 import { AdapterMux } from './src/handler/mux';
-import { startGlobalEventListener, createIncomingHandler } from './src/handler';
+import { createIncomingHandler, handleHookEvent } from './src/handler';
 import { setBridgeFileStoreDir } from './src/bridge/file.store';
 
 import type { BridgeAdapter } from './src/types';
@@ -30,17 +30,22 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): 
 
 export const BridgePlugin: Plugin = async ctx => {
   const { client } = ctx;
+  const sourceMode = process.env.BRIDGE_EVENT_SOURCE_MODE || 'hook-only';
+  if (sourceMode !== 'hook-only') {
+    bridgeLogger.warn(
+      `[Plugin] BRIDGE_EVENT_SOURCE_MODE=${sourceMode} is reserved; fallback=hook-only`,
+    );
+  }
   bridgeLogger.info(
     `[Plugin] bridge entry initializing logFile=${getBridgeLogFilePath()} pid=${process.pid} instance=${runtimeInstanceId}`,
   );
+  const mux: AdapterMux = globalState.__bridge_mux || new AdapterMux();
+  globalState.__bridge_mux = mux;
 
   const bootstrap = async () => {
     try {
       const raw = await client.config.get();
       const cfg = raw?.data;
-
-      const mux: AdapterMux = globalState.__bridge_mux || new AdapterMux();
-      globalState.__bridge_mux = mux;
       const adapterInstances: Map<string, BridgeAdapter> =
         globalState.__bridge_adapter_instances || new Map<string, BridgeAdapter>();
       const startedAdapters: Set<string> =
@@ -103,15 +108,8 @@ export const BridgePlugin: Plugin = async ctx => {
         }
       }
 
-      if (!globalState.__bridge_listener_started) {
-        globalState.__bridge_listener_started = true;
-        startGlobalEventListener(client, mux).catch(err => {
-          bridgeLogger.error('[Plugin] startGlobalEventListener failed', err);
-          globalState.__bridge_listener_started = false;
-        });
-      } else {
-        bridgeLogger.info('[Plugin] global listener already started');
-      }
+      // Hook-first mode: do not start SSE listeners as main processing path.
+      bridgeLogger.info('[Plugin] event source mode=hook-only (SSE listener not started)');
 
       bridgeLogger.info('[Plugin] BridgePlugin ready');
     } catch (e) {
@@ -120,5 +118,11 @@ export const BridgePlugin: Plugin = async ctx => {
   };
 
   bootstrap();
-  return {};
+  return {
+    event: async ({ event }) => {
+      await handleHookEvent(client, mux, event).catch(err => {
+        bridgeLogger.error('[Plugin] hook event dispatch failed', err);
+      });
+    },
+  };
 };

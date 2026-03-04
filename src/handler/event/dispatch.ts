@@ -128,7 +128,22 @@ function isSchedulerCallbackMetadata(metadata: unknown): boolean {
   return typeof obj.task_id === 'string' && typeof obj.run_id === 'string';
 }
 
-function warnRouteMissOnce(eventType: string, sessionId: string, messageId?: string): void {
+function isBridgeManagedSession(sessionId: string, deps: EventFlowDeps): boolean {
+  if (deps.sessionToAdapterKey.has(sessionId)) return true;
+  if (deps.sessionReplyWatchdogTimers.has(sessionId)) return true;
+  for (const sid of deps.sessionCache.values()) {
+    if (sid === sessionId) return true;
+  }
+  return false;
+}
+
+function warnRouteMissOnce(
+  eventType: string,
+  sessionId: string,
+  messageId?: string,
+  level: 'warn' | 'debug' = 'warn',
+  reason = 'session has no chat mapping in memory'
+): void {
   const key = `${eventType}:${sessionId}`;
   const now = Date.now();
   const last = lastRouteMissWarnAt.get(key) ?? 0;
@@ -136,11 +151,12 @@ function warnRouteMissOnce(eventType: string, sessionId: string, messageId?: str
     return;
   }
   lastRouteMissWarnAt.set(key, now);
-  bridgeLogger.warn(
-    `[BridgeFlow] route.miss event=${eventType} sid=${sessionId} mid=${
-      messageId || '-'
-    } (session has no chat mapping in memory)`
-  );
+  const text = `[BridgeFlow] route.miss event=${eventType} sid=${sessionId} mid=${messageId || '-'} (${reason})`;
+  if (level === 'warn') {
+    bridgeLogger.warn(text);
+    return;
+  }
+  bridgeLogger.debug(text);
 }
 
 function hydrateSessionRouteFromMetadata(
@@ -273,7 +289,14 @@ async function handleMessageUpdatedEvent(
 
   const target = resolveSessionTarget(sid, mux, deps);
   if (!target) {
-    warnRouteMissOnce('message.updated', sid, mid);
+    const managed = isBridgeManagedSession(sid, deps);
+    warnRouteMissOnce(
+      'message.updated',
+      sid,
+      mid,
+      managed ? 'warn' : 'debug',
+      managed ? 'bridge session missing chat mapping' : 'external/unmanaged session'
+    );
     return;
   }
   const { ctx, adapter } = target;
@@ -346,7 +369,14 @@ async function handleMessagePartUpdatedEvent(
 
   const target = resolveSessionTarget(sessionId, mux, deps);
   if (!target) {
-    warnRouteMissOnce('message.part.updated', sessionId, messageId);
+    const managed = isBridgeManagedSession(sessionId, deps);
+    warnRouteMissOnce(
+      'message.part.updated',
+      sessionId,
+      messageId,
+      managed ? 'warn' : 'debug',
+      managed ? 'bridge session missing chat mapping' : 'external/unmanaged session'
+    );
     return;
   }
   const { ctx, adapter } = target;
@@ -506,7 +536,14 @@ async function handleSessionErrorEvent(
 
   const target = resolveSessionTarget(sid, mux, deps);
   if (!target) {
-    warnRouteMissOnce('session.error', sid);
+    const managed = isBridgeManagedSession(sid, deps);
+    warnRouteMissOnce(
+      'session.error',
+      sid,
+      undefined,
+      managed ? 'warn' : 'debug',
+      managed ? 'bridge session missing chat mapping' : 'external/unmanaged session'
+    );
     return;
   }
   const { ctx, adapter } = target;
@@ -542,7 +579,14 @@ async function handleSessionIdleEvent(
 
   const target = resolveSessionTarget(sid, mux, deps);
   if (!target) {
-    warnRouteMissOnce('session.idle', sid);
+    const managed = isBridgeManagedSession(sid, deps);
+    warnRouteMissOnce(
+      'session.idle',
+      sid,
+      undefined,
+      managed ? 'warn' : 'debug',
+      managed ? 'bridge session missing chat mapping' : 'external/unmanaged session'
+    );
     return;
   }
   const { ctx, adapter } = target;
