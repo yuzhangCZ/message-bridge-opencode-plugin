@@ -7,7 +7,7 @@ async function main() {
     ak: 'test_access_key',
     sk: 'test_secret_key',
     mode: 'ws',
-    mock_server_url: 'ws://localhost:8179',
+    server_url: 'ws://localhost:8179',
   };
 
   const adapter = new TestAppAdapter(config);
@@ -15,7 +15,7 @@ async function main() {
   // 启动适配器
   await adapter.start(async (chatId, text, messageId, senderId) => {
     console.log(`[Handler] Received message: chat=${chatId} text=${text} from=${senderId}`);
-    
+
     // 回复消息
     const reply = `Echo: ${text}`;
     await adapter.sendMessage(chatId, reply);

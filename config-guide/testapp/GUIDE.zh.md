@@ -22,7 +22,7 @@ TestApp 是一个用于测试和开发的 Mock 服务器适配器。它通过 We
         "app_id": "your_app_id",
         "ak": "your_access_key",
         "sk": "your_secret_key",
-        "mock_server_url": "ws://localhost:8179"
+        "server_url": "ws://localhost:8179"
       }
     }
   }
@@ -38,7 +38,7 @@ TestApp 是一个用于测试和开发的 Mock 服务器适配器。它通过 We
 | `app_id` | 是 | 字符串 | - | 应用标识符 |
 | `ak` | 是 | 字符串 | - | 认证密钥（Access Key） |
 | `sk` | 是 | 字符串 | - | 密钥（Secret Key） |
-| `mock_server_url` | 否 | 字符串 | `ws://localhost:8179` | Mock 服务器的 WebSocket URL |
+| `server_url` | 否 | 字符串 | `ws://localhost:8179` | Mock 服务器的 WebSocket URL |
 
 **注意：** TestApp 仅支持 **WebSocket 模式**（`mode: 'ws'`），该值会自动设置，无需手动配置。
 
@@ -46,7 +46,7 @@ TestApp 是一个用于测试和开发的 Mock 服务器适配器。它通过 We
 
 ## 🚀 启动 Opencode
 
-1. 确保你的 Mock 服务器已运行，并且可以通过配置的 `mock_server_url` 访问。
+1. 确保你的 Mock 服务器已运行，并且可以通过配置的 `server_url` 访问。
 
 2. 启动 **opencode**：
 
@@ -140,7 +140,7 @@ asyncio.get_event_loop().run_forever()
 **现象：** 无法连接到 Mock 服务器
 
 **解决方案：**
-1. 确认 Mock 服务器在指定的 `mock_server_url` 上运行
+1. 确认 Mock 服务器在指定的 `server_url` 上运行
 2. 检查与 Mock 服务器的网络连通性
 3. 验证 WebSocket URL 格式（应以 `ws://` 或 `wss://` 开头）
 

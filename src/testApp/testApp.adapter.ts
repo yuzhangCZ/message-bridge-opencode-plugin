@@ -10,7 +10,7 @@ export class TestAppAdapter implements BridgeAdapter {
 
   constructor(config: TestAppConfig) {
     this.config = config;
-    this.client = new TestAppClient(config.mock_server_url, config.ak, config.sk);
+    this.client = new TestAppClient(config.server_url, config.ak, config.sk);
     this.renderer = new TestAppRenderer();
   }
 

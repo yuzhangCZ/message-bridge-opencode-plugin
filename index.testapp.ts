@@ -10,7 +10,8 @@ export function parseTestAppConfig(cfg: Config | undefined): TestAppConfig {
   const app_id = typeof options.app_id === 'string' ? options.app_id : '';
   const ak = typeof options.ak === 'string' ? options.ak : '';
   const sk = typeof options.sk === 'string' ? options.sk : '';
-  const mock_server_url = typeof options.mock_server_url === 'string' ? options.mock_server_url : 'ws://localhost:8179';
+  const serverUrl =
+    typeof options.server_url === 'string' ? options.server_url : 'ws://localhost:8179';
 
   if (!app_id || !ak || !sk) {
     throw new Error('[Plugin] Missing options for testapp: app_id/ak/sk');
@@ -24,6 +25,6 @@ export function parseTestAppConfig(cfg: Config | undefined): TestAppConfig {
     ak,
     sk,
     mode,
-    mock_server_url,
+    server_url: serverUrl,
   };
 };

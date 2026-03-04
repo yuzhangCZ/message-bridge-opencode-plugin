@@ -23,7 +23,7 @@ TestApp is a mock server adapter for testing and development purposes. It connec
         "app_id": "your_app_id",
         "ak": "your_access_key",
         "sk": "your_secret_key",
-        "mock_server_url": "ws://localhost:8179"
+        "server_url": "ws://localhost:8179"
       }
     }
   }
@@ -39,7 +39,7 @@ TestApp is a mock server adapter for testing and development purposes. It connec
 | `app_id` | Yes | String | - | Application identifier |
 | `ak` | Yes | String | - | Access Key for authentication |
 | `sk` | Yes | String | - | Secret Key for authentication |
-| `mock_server_url` | No | String | `ws://localhost:8179` | WebSocket URL of the mock server |
+| `server_url` | No | String | `ws://localhost:8179` | WebSocket URL of the mock server |
 
 **Note:** TestApp only supports **WebSocket mode** (`mode: 'ws'`). This is set automatically and does not need to be configured.
 
@@ -47,7 +47,7 @@ TestApp is a mock server adapter for testing and development purposes. It connec
 
 ## 🚀 Launching Opencode
 
-1. Ensure your mock server is running and accessible at the configured `mock_server_url`.
+1. Ensure your mock server is running and accessible at the configured `server_url`.
 
 2. Start **opencode**:
 
@@ -141,7 +141,7 @@ asyncio.get_event_loop().run_forever()
 **Symptom:** Unable to connect to mock server
 
 **Solutions:**
-1. Verify the mock server is running at the specified `mock_server_url`
+1. Verify the mock server is running at the specified `server_url`
 2. Check network connectivity to the mock server
 3. Verify the WebSocket URL format (should start with `ws://` or `wss://`)
 

@@ -30,7 +30,7 @@ Last Updated: 2026-03-04
 3. TestApp 初始化逻辑仍复用既有语义：
 - 必填字段：`app_id/ak/sk`
 - `mode` 固定 `ws`
-- `mock_server_url` 默认 `ws://localhost:8179`
+- `server_url` 默认 `ws://localhost:8179`
 
 ## Public Interfaces / Types（公开接口与类型）
 ```ts
@@ -46,7 +46,7 @@ interface BridgeTestAppConfig {
   app_id: string;
   ak: string;
   sk: string;
-  mock_server_url?: string;
+  server_url?: string;
 }
 
 interface BridgePluginConfig {
@@ -72,7 +72,7 @@ interface ConfigLoadResult {
 ## Normalization Rules（标准化规则）
 1. 若 `enabled` 缺省，回填为 `true`。
 2. 若 `testapp.mode` 缺省，回填为 `ws`。
-3. 若 `testapp.mock_server_url` 缺省，回填为 `ws://localhost:8179`。
+3. 若 `testapp.server_url` 缺省，回填为 `ws://localhost:8179`。
 4. `runtime` 缺省字段按需求文档完整契约默认值回填。
 5. 若 `platform != testapp`，立即失败并返回结构化错误。
 
@@ -80,7 +80,7 @@ interface ConfigLoadResult {
 1. `config_version` 必须为 `1`。
 2. `testapp.app_id` / `testapp.ak` / `testapp.sk` 必须为非空字符串。
 3. `testapp.mode` 仅允许 `ws`。
-4. `testapp.mock_server_url` 若存在，必须是 `ws://` 或 `wss://`。
+4. `testapp.server_url` 若存在，必须是 `ws://` 或 `wss://`。
 5. 类型错误统一映射为可读错误项，包含字段路径。
 
 ## Error Model（错误模型）
@@ -114,7 +114,7 @@ interface ConfigValidationError {
 - 配置来源列表
 - `platform`
 - `enabled`
-- `mock_server_url`（可明文）
+- `server_url`（可明文）
 2. 脱敏字段：
 - `ak` / `sk` 必须掩码输出（如 `ab***yz`）
 3. 错误日志输出字段路径与修复建议，不输出明文密钥。

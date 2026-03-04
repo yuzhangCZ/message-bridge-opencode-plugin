@@ -22,7 +22,7 @@ Last Updated: 2026-03-04
 ## Unit Test Plan（单元测试计划）
 ### U1 - Minimal Config Pass
 - 输入：最小配置（含 `app_id/ak/sk`）
-- 期望：解析通过，`mode` 回填为 `ws`，`mock_server_url` 回填默认值
+- 期望：解析通过，`mode` 回填为 `ws`，`server_url` 回填默认值
 
 ### U2 - Full Config Pass
 - 输入：完整配置契约
@@ -36,8 +36,8 @@ Last Updated: 2026-03-04
 - 输入：`testapp.mode='http'`
 - 期望：失败（或被固定归一，需与设计文档保持唯一策略）
 
-### U5 - Default mock_server_url
-- 输入：未配置 `mock_server_url`
+### U5 - Default server_url
+- 输入：未配置 `server_url`
 - 期望：回填 `ws://localhost:8179`
 
 ### U6 - Runtime Defaults
@@ -72,8 +72,8 @@ Last Updated: 2026-03-04
 - 输入：缺少 `sk`
 - 期望：启动失败，错误可读且包含字段提示
 
-### E4 - Unreachable mock_server_url
-- 输入：`mock_server_url=ws://localhost:65535`
+### E4 - Unreachable server_url
+- 输入：`server_url=ws://localhost:65535`
 - 期望：连接失败，输出可诊断日志（地址、失败原因）
 
 ### E5 - No agent node dependency

@@ -70,7 +70,7 @@ npx ts-node src/testApp/example.ts
 ```typescript
 interface TestAppConfig {
   mode: 'ws';                              // 仅支持 WebSocket
-  mock_server_url: string;                 // Mock Server 地址
+  server_url: string;                      // Mock Server 地址
   file_store_dir?: string;                 // 文件存储目录
   auto_send_local_files?: boolean;         // 自动发送本地文件
   auto_send_local_files_max_mb?: number;   // 文件大小限制

@@ -41,7 +41,7 @@ import type { TestAppConfig } from './testApp';
 
 const config: TestAppConfig = {
   mode: 'ws',
-  mock_server_url: 'ws://localhost:8179',
+  server_url: 'ws://localhost:8179',
 };
 
 const adapter = new TestAppAdapter(config);
@@ -64,7 +64,7 @@ await adapter.stop();
 | 字段 | 类型 | 必填 | 描述 |
 |------|------|------|------|
 | mode | 'ws' | 是 | 连接模式，仅支持 WebSocket |
-| mock_server_url | string | 是 | Mock Server 的 WebSocket 地址 |
+| server_url | string | 是 | Mock Server 的 WebSocket 地址 |
 | file_store_dir | string | 否 | 文件存储目录 |
 | auto_send_local_files | boolean | 否 | 是否自动发送本地文件 |
 | auto_send_local_files_max_mb | number | 否 | 自动发送文件的最大大小 (MB) |

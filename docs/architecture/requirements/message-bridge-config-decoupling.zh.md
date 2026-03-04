@@ -19,7 +19,7 @@ Last Updated: 2026-03-04
 - 混合方案（同时以独立配置 + `agent.*.options` 作为主路径）。
 
 ## Background（背景）
-现有 TestApp 配置由 `index.testapp.ts` 的 `parseTestAppConfig` 从 `agent.testapp.options` 读取，核心字段为 `app_id / ak / sk / mock_server_url`，并固定 `mode='ws'`。
+现有 TestApp 配置由 `index.testapp.ts` 的 `parseTestAppConfig` 从 `agent.testapp.options` 读取，核心字段为 `app_id / ak / sk / server_url`，并固定 `mode='ws'`。
 
 该方式在工程上可用，但会带来两个问题：
 1. 配置承载位置属于 Agent 语义域，不利于后续插件能力扩展。
@@ -69,7 +69,7 @@ Last Updated: 2026-03-04
     "app_id": "your_app_id",
     "ak": "your_access_key",
     "sk": "your_secret_key",
-    "mock_server_url": "ws://localhost:8179"
+    "server_url": "ws://localhost:8179"
   }
 }
 ```
@@ -78,7 +78,7 @@ Last Updated: 2026-03-04
 1. `platform` 必须为 `testapp`。
 2. `testapp.mode` 固定为 `ws`，不接受其他值。
 3. `testapp.app_id` / `testapp.ak` / `testapp.sk` 必填。
-4. `testapp.mock_server_url` 可选，默认值为 `ws://localhost:8179`。
+4. `testapp.server_url` 可选，默认值为 `ws://localhost:8179`。
 5. `runtime.*` 可选，默认值按完整契约回填。
 6. 敏感字段（`ak` / `sk`）日志必须脱敏。
 
@@ -107,7 +107,7 @@ Last Updated: 2026-03-04
 2. 完整配置解析通过。
 3. 缺 `app_id/ak/sk` 解析失败。
 4. `mode` 非 `ws` 行为符合设计。
-5. `mock_server_url` 默认值回填。
+5. `server_url` 默认值回填。
 6. `runtime` 默认值回填。
 7. 敏感字段脱敏验证。
 
@@ -115,7 +115,7 @@ Last Updated: 2026-03-04
 1. 使用最小配置启动插件并连接 mock server 成功。
 2. 入站消息 -> 创建会话 -> 回传消息闭环成功。
 3. 错误配置（缺 `sk`）启动失败并输出可读错误。
-4. `mock_server_url` 不可达时输出连接失败诊断日志。
+4. `server_url` 不可达时输出连接失败诊断日志。
 5. 主方案下不依赖 `agent.*` 节点。
 
 ## Assumptions（假设）

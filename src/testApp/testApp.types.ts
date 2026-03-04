@@ -29,7 +29,7 @@ export interface TestAppConfig {
   ak: string;
   sk: string;
   mode: 'ws';
-  mock_server_url: string;
+  server_url: string;
   file_store_dir?: string;
   auto_send_local_files?: boolean;
   auto_send_local_files_max_mb?: number;

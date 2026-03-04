@@ -53,7 +53,7 @@
     "app_id": "your_app_id",
     "ak": "your_access_key",
     "sk": "your_secret_key",
-    "mock_server_url": "ws://localhost:8179"
+    "server_url": "ws://localhost:8179"
   }
 }
 ```
@@ -75,7 +75,7 @@
 | `testapp.app_id` | 是 | string | - | 应用 ID |
 | `testapp.ak` | 是 | string | - | Access Key |
 | `testapp.sk` | 是 | string | - | Secret Key |
-| `testapp.mock_server_url` | 否 | string | `ws://localhost:8179` | Mock Server WebSocket 地址 |
+| `testapp.server_url` | 否 | string | `ws://localhost:8179` | Mock Server WebSocket 地址 |
 
 ---
 
@@ -119,7 +119,7 @@ opencode web
 3. 检查 `config_version` 是否为 `1`。
 
 ### 连接失败
-1. 检查 `testapp.mock_server_url` 是否可访问。
+1. 检查 `testapp.server_url` 是否可访问。
 2. 检查 mock server 是否已启动。
 3. 检查 WebSocket 协议前缀是否为 `ws://` 或 `wss://`。
 
