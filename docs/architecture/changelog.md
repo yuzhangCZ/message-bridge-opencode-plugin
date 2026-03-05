@@ -1,5 +1,26 @@
 # Architecture Changelog
 
+## 2026-03-05 - v1.11 Feishu Direct Call Flow Archive
+
+### Summary
+新增飞书直接调用链路归档文档，明确 `opencode server`、`BridgeAdapter` 与 Feishu API 的直接关系，并补充 Reaction 与文件发送触发时机；同步更新架构索引。
+
+### Changed Files
+- `docs/architecture/flows/feishu-direct-call-flow.zh.md`
+- `docs/architecture/README.zh.md`
+- `docs/architecture/changelog.md`
+
+### Impact Scope
+- Documentation only
+- No runtime behavior change
+- No external API/interface signature change
+
+### Compatibility
+- Fully backward compatible (docs-only change)
+
+### Follow-up
+- 若后续飞书链路行为变更（例如 Reaction 或自动文件发送策略调整），需同步更新本归档文档与代码锚点行号。
+
 ## 2026-03-04 - v1.10 Remove Agent Config Compatibility Path
 
 ### Summary

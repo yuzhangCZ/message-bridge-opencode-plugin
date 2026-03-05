@@ -1,7 +1,7 @@
 # message-bridge-open-code 架构设计文档（持续演进基线）
 
 Doc Version: v1.0
-Last Updated: 2026-03-04
+Last Updated: 2026-03-05
 
 ## Purpose（目的）
 本目录用于沉淀 `message-bridge-open-code`（仓库包名 `message-bridge-opencode-plugin`）的长期架构设计基线，支持后续按统一规范持续演进。
@@ -48,6 +48,7 @@ Last Updated: 2026-03-04
 - OpenCode SDK 接口面：[opencode-sdk.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/interfaces/opencode-sdk.zh.md)
 - TestApp 协议：[testapp-protocol.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/interfaces/testapp-protocol.zh.md)
 - 核心消息流：[core-message-flow.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/flows/core-message-flow.zh.md)
+- 飞书直接调用链路：[feishu-direct-call-flow.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/flows/feishu-direct-call-flow.zh.md)
 - 事件订阅复现报告：[event-subscribe-repro-report.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/flows/event-subscribe-repro-report.zh.md)
 - 架构变更日志：[changelog.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/changelog.md)
 - ADR 入口：[adr/README.zh.md](/Users/zy/Code/opencode/message-bridge-opencode-plugin/docs/architecture/adr/README.zh.md)
